@@ -1,10 +1,12 @@
 # MP4 to H.264 Converter
 
-A Python CLI tool to convert MP4 files of any size to MP4 with H.264 video codec.
+A Python tool to convert MP4 files of any size to MP4 with H.264 video codec. Includes both CLI and web interface.
 
 ## Features
 
-- Convert any MP4 file to H.264 codec
+- Convert any video file to H.264 codec
+- **Web interface** with drag-and-drop upload
+- **CLI tool** for command-line usage
 - Handles files of any size with streaming conversion
 - Real-time progress tracking
 - Batch conversion for multiple files
@@ -45,7 +47,27 @@ A Python CLI tool to convert MP4 files of any size to MP4 with H.264 video codec
 
 ## Usage
 
-### Basic Conversion
+### Web Interface
+
+Start the web server:
+
+```bash
+python web/app.py
+```
+
+Then open http://localhost:5000 in your browser. You can:
+- Drag and drop video files or click to browse
+- Adjust quality (CRF) and speed settings
+- Watch real-time conversion progress
+- Download the converted file
+
+Options:
+```bash
+python web/app.py --port 8080      # Use different port
+python web/app.py --host 0.0.0.0   # Allow external connections
+```
+
+### CLI - Basic Conversion
 
 ```bash
 # Convert a single file (output: input_h264.mp4)

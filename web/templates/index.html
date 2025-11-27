@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MP4 to H.264 Converter</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #1a1a2e;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: #4a90d9;
+            background: #f8faff;
+        }
+
+        .upload-area.has-file {
+            border-color: #27ae60;
+            background: #f0fff4;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .upload-text strong {
+            color: #4a90d9;
+        }
+
+        .file-name {
+            color: #27ae60;
+            font-weight: 600;
+            margin-top: 10px;
+            word-break: break-all;
+        }
+
+        .settings {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            color: #333;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        select, input[type="range"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: #fff;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #4a90d9;
+        }
+
+        .crf-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .crf-value {
+            background: #4a90d9;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            height: 6px;
+            background: #ddd;
+            border-radius: 3px;
+            padding: 0;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #4a90d9;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4a90d9 0%, #357abd 100%);
+            color: #fff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(74, 144, 217, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60 0%, #219a52 100%);
+            color: #fff;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(39, 174, 96, 0.4);
+        }
+
+        .progress-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .progress-container.active {
+            display: block;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4a90d9 0%, #27ae60 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .result {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: #f0fff4;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .result.active {
+            display: block;
+        }
+
+        .result.error {
+            background: #fff5f5;
+        }
+
+        .result-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .result-text {
+            color: #27ae60;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .result.error .result-text {
+            color: #e74c3c;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        .quality-hint {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MP4 to H.264 Converter</h1>
+        <p class="subtitle">Convert any video file to MP4 with H.264 codec</p>
+
+        <form id="convert-form">
+            <div class="upload-area" id="upload-area">
+                <div class="upload-icon">&#128249;</div>
+                <p class="upload-text">
+                    Drag & drop your video here or <strong>browse</strong>
+                </p>
+                <p class="file-name" id="file-name"></p>
+            </div>
+            <input type="file" id="file-input" accept=".mp4,.mov,.avi,.mkv,.webm,video/*">
+
+            <div class="settings">
+                <div class="setting-group">
+                    <div class="crf-display">
+                        <label for="crf">Quality (CRF)</label>
+                        <span class="crf-value" id="crf-value">23</span>
+                    </div>
+                    <input type="range" id="crf" name="crf" min="18" max="35" value="23">
+                    <span class="quality-hint">Lower = better quality, larger file</span>
+                </div>
+
+                <div class="setting-group">
+                    <label for="preset">Speed</label>
+                    <select id="preset" name="preset">
+                        <option value="ultrafast">Ultrafast</option>
+                        <option value="veryfast">Very Fast</option>
+                        <option value="fast">Fast</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="slow">Slow</option>
+                        <option value="veryslow">Very Slow</option>
+                    </select>
+                    <span class="quality-hint">Slower = better compression</span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="convert-btn" disabled>
+                Select a file to convert
+            </button>
+        </form>
+
+        <div class="progress-container" id="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <p class="progress-text" id="progress-text">Converting... 0%</p>
+        </div>
+
+        <div class="result" id="result">
+            <div class="result-icon" id="result-icon">&#10004;</div>
+            <p class="result-text" id="result-text">Conversion complete!</p>
+            <button class="btn btn-success" id="download-btn">Download Converted File</button>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const fileName = document.getElementById('file-name');
+        const convertBtn = document.getElementById('convert-btn');
+        const convertForm = document.getElementById('convert-form');
+        const progressContainer = document.getElementById('progress-container');
+        const progressFill = document.getElementById('progress-fill');
+        const progressText = document.getElementById('progress-text');
+        const result = document.getElementById('result');
+        const resultIcon = document.getElementById('result-icon');
+        const resultText = document.getElementById('result-text');
+        const downloadBtn = document.getElementById('download-btn');
+        const crfSlider = document.getElementById('crf');
+        const crfValue = document.getElementById('crf-value');
+
+        let selectedFile = null;
+        let currentJobId = null;
+
+        // CRF slider update
+        crfSlider.addEventListener('input', () => {
+            crfValue.textContent = crfSlider.value;
+        });
+
+        // File selection via click
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        // File selection via input
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                selectFile(e.target.files[0]);
+            }
+        });
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length > 0) {
+                selectFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        function selectFile(file) {
+            selectedFile = file;
+            fileName.textContent = file.name;
+            uploadArea.classList.add('has-file');
+            convertBtn.disabled = false;
+            convertBtn.textContent = 'Convert to H.264';
+            result.classList.remove('active');
+        }
+
+        // Form submission
+        convertForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!selectedFile) return;
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('crf', crfSlider.value);
+            formData.append('preset', document.getElementById('preset').value);
+
+            convertBtn.disabled = true;
+            convertBtn.textContent = 'Uploading...';
+            progressContainer.classList.add('active');
+            progressFill.style.width = '0%';
+            progressText.textContent = 'Uploading...';
+            result.classList.remove('active', 'error');
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Upload failed');
+                }
+
+                currentJobId = data.job_id;
+                convertBtn.textContent = 'Converting...';
+                pollProgress(currentJobId);
+
+            } catch (error) {
+                showError(error.message);
+            }
+        });
+
+        function pollProgress(jobId) {
+            const interval = setInterval(async () => {
+                try {
+                    const response = await fetch(`/status/${jobId}`);
+                    const data = await response.json();
+
+                    progressFill.style.width = `${data.progress}%`;
+                    progressText.textContent = `Converting... ${Math.round(data.progress)}%`;
+
+                    if (data.status === 'completed') {
+                        clearInterval(interval);
+                        showSuccess();
+                    } else if (data.status.startsWith('error')) {
+                        clearInterval(interval);
+                        showError(data.status.replace('error: ', ''));
+                    }
+                } catch (error) {
+                    clearInterval(interval);
+                    showError('Connection lost');
+                }
+            }, 500);
+        }
+
+        function showSuccess() {
+            progressContainer.classList.remove('active');
+            result.classList.remove('error');
+            result.classList.add('active');
+            resultIcon.textContent = '\u2714';
+            resultText.textContent = 'Conversion complete!';
+            convertBtn.textContent = 'Convert Another';
+            convertBtn.disabled = false;
+        }
+
+        function showError(message) {
+            progressContainer.classList.remove('active');
+            result.classList.add('active', 'error');
+            resultIcon.textContent = '\u2716';
+            resultText.textContent = `Error: ${message}`;
+            convertBtn.textContent = 'Try Again';
+            convertBtn.disabled = false;
+        }
+
+        // Download button
+        downloadBtn.addEventListener('click', () => {
+            if (currentJobId) {
+                window.location.href = `/download/${currentJobId}`;
+            }
+        });
+    </script>
+</body>
+</html>
