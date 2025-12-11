@@ -44,8 +44,14 @@ def cleanup_old_files():
 
 
 @app.route("/")
-def index():
-    """Render the main page."""
+def landing():
+    """Render the landing page."""
+    return render_template("landing.html")
+
+
+@app.route("/converter")
+def converter():
+    """Render the converter page."""
     return render_template("index.html")
 
 

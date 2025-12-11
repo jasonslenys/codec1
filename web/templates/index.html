@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MP4 to H.264 Converter</title>
+    <title>Convert Video - H.264 Converter</title>
     <style>
         * {
             box-sizing: border-box;
@@ -260,10 +260,43 @@
             color: #888;
             margin-top: 4px;
         }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #4a90d9;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #357abd;
+        }
+
+        .convert-again {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .convert-again a {
+            color: #4a90d9;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .convert-again a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <a href="/" class="back-link">&#8592; Back to Home</a>
         <h1>MP4 to H.264 Converter</h1>
         <p class="subtitle">Convert any video file to MP4 with H.264 codec</p>
 
